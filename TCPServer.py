@@ -15,7 +15,7 @@ serverPort = 6789
 serverSocket.bind(("", serverPort))
 
 # Listen to at most 1 connection at a time
-# serverSocket.listen(2)
+serverSocket.listen(2)
 
 print ('The server is ready to receive')
 
