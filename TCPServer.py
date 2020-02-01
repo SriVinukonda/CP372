@@ -2,10 +2,19 @@
 from socket import *
 import sys # In order to terminate the program
 
+
+
+
+class note():
+	message: "Hello World"
+	coords = [-1,-1]
+	dimensions = [0,0]
+	color = ""
+
+
 # Create a TCP server socket
 #(AF_INET is used for IPv4 protocols)
 #(SOCK_STREAM is used for TCP)
-
 server_start = " "
 
 #used to get all info from command line - board size , color  etc
