@@ -12,10 +12,15 @@ class note():
 	color = ""
 
 def createNote(messageIn,coordsIn,dimensionsIn, colorIn):
-	message =  messageIn
-	coords = coordsIn
-	dimensions = dimensionsIn
-	color = colorIn
+	stickyNote = note()
+
+	stickyNote.message = messageIn
+	stickyNote.coords = coordsIn
+	stickyNote.dimensions = dimensionsIn
+	stickyNote.color = colorIn
+
+	return stickyNote
+
 # Create a TCP server socket
 #(AF_INET is used for IPv4 protocols)
 #(SOCK_STREAM is used for TCP)
