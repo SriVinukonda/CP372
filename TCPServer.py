@@ -55,6 +55,7 @@ print ('The server is ready to receive')
 
 #while server is on keep intaking client sockets
 while True:
+	
 	print('The server is ready to receive')
 
 	# Set up a new connection from the client

@@ -60,40 +60,42 @@ while disconnect == 0:
             good_input = 1
 
 
+    try:
+        #check which options and respond accordingly
+        if option == 1:
 
-    #check which options and respond accordingly
-    if option == 1:
+            #ask user for port and name
+            serverPort = int(input("Server Port : "))
+            serverName = input("server address : ")
 
-        #ask user for port and name
-        serverPort = int(input("Server Port : "))
-        serverName = input("server address : ")
+            #connect to socket and send server info
+            clientSocket.connect((serverName, serverPort))
 
-        #connect to socket and send server info
-        clientSocket.connect((serverName, serverPort))
+        elif option == 2:
+            
+            message = "2 "
+            #send message with option
+            clientSocket.send(message.encode())
+            clientSocket.close()
+            disconnect = 1  
 
-    elif option == 2:
-        
-        message = "2 "
-        #send message with option
-        clientSocket.send(message.encode())
-        clientSocket.close()
-        disconnect = 1  
+        elif option == 3:
 
-    elif option == 3:
+            #grabs info needed to to client functions
+            formattedMessage = clientSocket.recv(1024)
+            print('From server: ', formattedMessage.decode())
+            formattedMessage = formattedMessage.decode().split(" ")
 
-        #grabs info needed to to client functions
-        formattedMessage = clientSocket.recv(1024)
-        print('From server: ', formattedMessage.decode())
-        formattedMessage = formattedMessage.decode().split(" ")
+            #get values of board
+            board_width = formattedMessage[1]
+            board_height = formattedMessage[2]
 
-        #get values of board
-        board_width = formattedMessage[1]
-        board_height = formattedMessage[2]
-
-        note = post(board_width,board_height)
-        message = "3 " + note
-        #send message with note and option dictated
-        clientSocket.send(message.encode())
+            note = post(board_width,board_height)
+            message = "3 " + note
+            #send message with note and option dictated
+            clientSocket.send(message.encode())
+    except:
+        print("error try connecting before starting any process..")
 
 
 
