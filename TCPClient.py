@@ -16,5 +16,7 @@ serverName = input("server address : ")
 #connect to socket and send server info
 clientSocket.connect((serverName, serverPort))
 formattedMessage = clientSocket.recv(1024)
+
+#grabs info needed to to client functions
 print('From server: ', formattedMessage.decode())
 clientSocket.close()
