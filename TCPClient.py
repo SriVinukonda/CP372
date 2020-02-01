@@ -75,5 +75,9 @@ if option == 1:
     clientSocket.send(message.encode())
 
 elif option == 5:
+    
+    message = "5 "
+    #send message with option
+    clientSocket.send(message.encode())
     clientSocket.close()
 

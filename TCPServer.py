@@ -53,14 +53,16 @@ while True:
 	#getting message from client
 	message = connectionSocket.recv(1024).decode()
 	option = message[0]
-	note = message.split(" ")[1:]
 	print(option)
-	print(note)
+	
+	#if option was 1 then get note
+	if(option == 1):
+		note = ' '.join(message.split(" ")[1:])
+		print(note)
 
-
-	#closing all connections
-	connectionSocket.close()
-
+	elif(option == 5):
+		#closing all connections
+		connectionSocket.close()
 
 
 serverSocket.close()  
