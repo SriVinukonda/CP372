@@ -1,15 +1,31 @@
 # Import socket module
-from socket import * 
+from socket import *
 import sys # In order to terminate the program
 
 # Create a TCP server socket
 #(AF_INET is used for IPv4 protocols)
 #(SOCK_STREAM is used for TCP)
 
+# Assign a port number
+def initialize_board():
+	# Assign a port number
+	if(len(sys.argv) > 4):
+
+		serverPort = int(sys.argv[1])
+		board_width = int(sys.argv[2])
+		board_height = int(sys.argv[3])
+		color = sys.argv[4:]
+
+		return serverPort
+		
+	else:
+
+		print("not enough info provided")
+		exit(0)
+
 serverSocket = socket(AF_INET, SOCK_STREAM)
 
-# Assign a port number
-serverPort = 6789
+serverPort = initialize_board()
 
 # Bind the socket to server address and server port
 serverSocket.bind(("", serverPort))
@@ -32,6 +48,8 @@ while True:
 	capitalizedSentence = sentence.upper()
 	connectionSocket.send(capitalizedSentence.encode())
 	connectionSocket.close()
+
+
 
 
 
