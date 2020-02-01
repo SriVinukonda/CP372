@@ -8,7 +8,7 @@ import sys # In order to terminate the program
 
 server_start = " "
 
-
+#used to get all info from command line - board size , color  etc
 if(len(sys.argv) > 4):
 
 	serverPort = int(sys.argv[1])
@@ -44,11 +44,9 @@ while True:
 	# Set up a new connection from the client
 	connectionSocket, addr = serverSocket.accept()
 
-
+	#send in info client needs - size of board,color etc
 	connectionSocket.send(sys.argv[4].encode())
 	connectionSocket.close()
-
-
 
 
 
