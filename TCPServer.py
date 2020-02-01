@@ -24,6 +24,7 @@ else:
 	print("not enough info provided")
 	exit(0)
 
+#server socket initialization
 serverSocket = socket(AF_INET, SOCK_STREAM)
 
 # Bind the socket to server address and server port
@@ -34,18 +35,20 @@ serverSocket.listen(1)
 
 print ('The server is ready to receive')
 
-line = ""
-
 # Server should be up and running and listening to the incoming connections
 
+#while server is on keep intaking client sockets
 while True:
 	print('The server is ready to receive')
 
 	# Set up a new connection from the client
 	connectionSocket, addr = serverSocket.accept()
 
+	#convert list to string to send info to client
+	formatted_message = ' '.join(str(e) for e in sys.argv[1:])
+
 	#send in info client needs - size of board,color etc
-	connectionSocket.send(sys.argv[4].encode())
+	connectionSocket.send(formatted_message.encode())
 	connectionSocket.close()
 
 

@@ -14,10 +14,7 @@ serverPort = int(input("Server Port : "))
 serverName = input("server address : ")
 
 #connect to socket and send server info
-clientSocket.connect(("localhost", 5041))
-sentence = input(' Input lower case sentence: ')
-clientSocket.send(sentence.encode())
-modifiedSentence = clientSocket.recv(1024)
-
-print('From server: ', modifiedSentence.decode())
+clientSocket.connect((serverName, serverPort))
+formattedMessage = clientSocket.recv(1024)
+print('From server: ', formattedMessage.decode())
 clientSocket.close()
