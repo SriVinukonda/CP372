@@ -55,7 +55,7 @@ print ('The server is ready to receive')
 
 #while server is on keep intaking client sockets
 while True:
-	
+
 	print('The server is ready to receive')
 
 	# Set up a new connection from the client
@@ -69,10 +69,8 @@ while True:
 
 	try:
 		message = connectionSocket.recv(1024).decode()
-		print(message)
-		option = message[0]
-		print(option)	
-
+		option = int(message[0])
+	
 		#if option was 2 then get close , 3 note
 		if(option == 2):
 			#closing all connections

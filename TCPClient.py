@@ -58,12 +58,9 @@ while disconnect == 0:
 
     #validate an actual option is chosen
     while good_input == 0:
-
-        try:
-            option = int(input("Enter Option (1-5) : "))
-        except:
-            continue
-
+     
+        option = int(input("Enter Option (1-5) : "))
+    
         if(option == 1 or option == 2 or option == 3 or option == 4 or option == 5):
             good_input = 1
 
