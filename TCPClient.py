@@ -70,7 +70,9 @@ while good_input == 0:
 #check which options and respond accordingly
 if option == 1:
     note = post(board_width,board_height)
-    clientSocket.send(note.encode())
+    message = "1 " + note
+    #send message with note and option dictated
+    clientSocket.send(message.encode())
 
 elif option == 5:
     clientSocket.close()

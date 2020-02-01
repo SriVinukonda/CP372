@@ -49,8 +49,16 @@ while True:
 
 	#send in info client needs - size of board,color etc
 	connectionSocket.send(formatted_message.encode())
-	note = connectionSocket.recv(1024).decode()
+
+	#getting message from client
+	message = connectionSocket.recv(1024).decode()
+	option = message[0]
+	note = message.split(" ")[1:]
+	print(option)
 	print(note)
+
+
+	#closing all connections
 	connectionSocket.close()
 
 
