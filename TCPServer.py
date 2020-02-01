@@ -15,7 +15,7 @@ serverPort = 6789
 serverSocket.bind(("", serverPort))
 
 # Listen to at most 1 connection at a time
-serverSocket.listen(2)
+serverSocket.listen(1)
 
 print ('The server is ready to receive')
 
@@ -26,6 +26,7 @@ while True:
 
 	# Set up a new connection from the client
 	connectionSocket, addr = serverSocket.accept()
+
 	
 	sentence = connectionSocket.recv(1024).decode()
 	capitalizedSentence = sentence.upper()
