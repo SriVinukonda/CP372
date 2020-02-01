@@ -3,12 +3,11 @@
 from socket import *
 import sys # In order to terminate the program
 
-serverName = 'localhost'
-
-
 
 # Bind the socket to server address and server port
 clientSocket = socket(AF_INET, SOCK_STREAM)
+
+#ask user for port and name
 serverPort = int(input("Server Port : "))
 serverName = input("server address : ")
 clientSocket.connect((serverName, serverPort))
