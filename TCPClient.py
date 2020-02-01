@@ -19,7 +19,6 @@ formattedMessage = clientSocket.recv(1024)
 
 #grabs info needed to to client functions
 print('From server: ', formattedMessage.decode())
-clientSocket.close()
 
 #shows all options client can choose
 print("\n-----------------OPTIONS-------------\n")
@@ -39,6 +38,11 @@ while good_input == 0:
 
     if(option == 1 or option == 2 or option == 3 or option == 4 or option == 5):
         good_input = 1
+
+if option == 1:
+    post()
+elif option == 5:
+    clientSocket.close()
 
 
 def post():
