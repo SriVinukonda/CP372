@@ -16,21 +16,26 @@ def post(board_width,board_height):
     while good_input == 0:
 
         #ask user for note
-        print("\n--Enter note to be posted ex - 'POST 2 3 10 20 white Meeting next Wednesday from 2 to 3--\n")
-        note = input("Enter Note : ")
-        correct_input = note.split(" ")
 
-        if len(correct_input) >= 4:
+        try:
+            print("\n--Enter note to be posted ex - 'POST 2 3 10 20 white Meeting next Wednesday from 2 to 3--\n")
+            note = input("Enter Note : ")
+            correct_input = note.split(" ")
 
-            #this is to make sure the note itself is within the board defined
-            width = int(correct_input[1]) + int(correct_input[3])
-            height = int(correct_input[2]) + int(correct_input[4])
+            if len(correct_input) >= 4:
 
-            check_input = correct_input[0] == "POST" and width <= int(board_width) and height <= int(board_height)
+                #this is to make sure the note itself is within the board defined
+                width = int(correct_input[1]) + int(correct_input[3])
+                height = int(correct_input[2]) + int(correct_input[4])
 
-            if(check_input):
-                good_input = 1
-                return note
+                check_input = correct_input[0] == "POST" and width <= int(board_width) and height <= int(board_height)
+
+                if(check_input):
+                    good_input = 1
+                    return note
+
+        except:
+            print("Incorrect input , try again..")
 
 
 disconnect = 0
@@ -49,18 +54,22 @@ while disconnect == 0:
     print("\n---USE NUMBERS TO PICK OPTION---\n")
 
     good_input = 0
-
+    option = 0
 
     #validate an actual option is chosen
     while good_input == 0:
 
-        option = int(input("Enter Option (1-5) : "))
+        try:
+            option = int(input("Enter Option (1-5) : "))
+        except:
+            continue
 
         if(option == 1 or option == 2 or option == 3 or option == 4 or option == 5):
             good_input = 1
 
-
+    #keep trying if it doesnt work
     try:
+
         #check which options and respond accordingly
         if option == 1:
 
@@ -82,6 +91,7 @@ while disconnect == 0:
         elif option == 3:
 
             #grabs info needed to to client functions
+           
             formattedMessage = clientSocket.recv(1024)
             print('From server: ', formattedMessage.decode())
             formattedMessage = formattedMessage.decode().split(" ")
@@ -90,11 +100,14 @@ while disconnect == 0:
             board_width = formattedMessage[1]
             board_height = formattedMessage[2]
 
+
             note = post(board_width,board_height)
             message = "3 " + note
             #send message with note and option dictated
             clientSocket.send(message.encode())
+            
     except:
+
         print("error try connecting before starting any process..")
 
 
