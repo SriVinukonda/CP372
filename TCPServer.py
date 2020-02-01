@@ -6,12 +6,16 @@ import sys # In order to terminate the program
 
 
 class note():
-	message: "Hello World"
+	message = "Hello World"
 	coords = [-1,-1]
 	dimensions = [0,0]
 	color = ""
 
-
+def createNote(messageIn,coordsIn,dimensionsIn, colorIn):
+	message =  messageIn
+	coords = coordsIn
+	dimensions = dimensionsIn
+	color = colorIn
 # Create a TCP server socket
 #(AF_INET is used for IPv4 protocols)
 #(SOCK_STREAM is used for TCP)
