@@ -5,6 +5,9 @@ import sys # In order to terminate the program
 
 print("server_start")
 
+# Bind the socket to server address and server port
+clientSocket = socket(AF_INET, SOCK_STREAM)
+
 def post(board_width,board_height):
 
     good_input = 0
@@ -17,67 +20,81 @@ def post(board_width,board_height):
         note = input("Enter Note : ")
         correct_input = note.split(" ")
 
-        #this is to make sure the note itself is within the board defined
-        width = int(correct_input[1]) + int(correct_input[3])
-        height = int(correct_input[2]) + int(correct_input[4])
+        if len(correct_input) >= 4:
 
-        check_input = correct_input[0] == "POST" and width <= int(board_width) and height <= int(board_height)
+            #this is to make sure the note itself is within the board defined
+            width = int(correct_input[1]) + int(correct_input[3])
+            height = int(correct_input[2]) + int(correct_input[4])
 
-        if(check_input):
+            check_input = correct_input[0] == "POST" and width <= int(board_width) and height <= int(board_height)
+
+            if(check_input):
+                good_input = 1
+                return note
+
+
+disconnect = 0
+
+while disconnect == 0:
+
+    print("\n-----------------OPTIONS-------------\n")
+    print("1. CONNECT\n")
+    print("2. DISCONNECT\n")
+    print("3. POST\n")
+    print("4. GET\n")
+    print("5. PIN\n")
+    print("6. UNPIN\n")
+    print("7. CLEAR\n")
+
+    print("\n---USE NUMBERS TO PICK OPTION---\n")
+
+    good_input = 0
+
+
+    #validate an actual option is chosen
+    while good_input == 0:
+
+        option = int(input("Enter Option (1-5) : "))
+
+        if(option == 1 or option == 2 or option == 3 or option == 4 or option == 5):
             good_input = 1
-            return note
 
-   
 
-# Bind the socket to server address and server port
-clientSocket = socket(AF_INET, SOCK_STREAM)
 
-#ask user for port and name
-serverPort = int(input("Server Port : "))
-serverName = input("server address : ")
+    #check which options and respond accordingly
+    if option == 1:
 
-#connect to socket and send server info
-clientSocket.connect((serverName, serverPort))
-formattedMessage = clientSocket.recv(1024)
+        #ask user for port and name
+        serverPort = int(input("Server Port : "))
+        serverName = input("server address : ")
 
-#grabs info needed to to client functions
-print('From server: ', formattedMessage.decode())
-formattedMessage = formattedMessage.decode().split(" ")
+        #connect to socket and send server info
+        clientSocket.connect((serverName, serverPort))
 
-#get values of board
-board_width = formattedMessage[1]
-board_height = formattedMessage[2]
+    elif option == 2:
+        
+        message = "2 "
+        #send message with option
+        clientSocket.send(message.encode())
+        clientSocket.close()
+        disconnect = 1  
 
-#shows all options client can choose
-print("\n-----------------OPTIONS-------------\n")
-print("1. POST\n")
-print("2. GET\n")
-print("3. PIN/UNPIN\n")
-print("4. CLEAR\n")
-print("5. DISCONNECT\n")
-print("\n---USE NUMBERS TO PICK OPTION---\n")
+    elif option == 3:
 
-good_input = 0
+        #grabs info needed to to client functions
+        formattedMessage = clientSocket.recv(1024)
+        print('From server: ', formattedMessage.decode())
+        formattedMessage = formattedMessage.decode().split(" ")
 
-#validate an actual option is chosen
-while good_input == 0:
+        #get values of board
+        board_width = formattedMessage[1]
+        board_height = formattedMessage[2]
 
-    option = int(input("Enter Option (1-5) : "))
+        note = post(board_width,board_height)
+        message = "3 " + note
+        #send message with note and option dictated
+        clientSocket.send(message.encode())
 
-    if(option == 1 or option == 2 or option == 3 or option == 4 or option == 5):
-        good_input = 1
 
-#check which options and respond accordingly
-if option == 1:
-    note = post(board_width,board_height)
-    message = "1 " + note
-    #send message with note and option dictated
-    clientSocket.send(message.encode())
 
-elif option == 5:
-    
-    message = "5 "
-    #send message with option
-    clientSocket.send(message.encode())
-    clientSocket.close()
 

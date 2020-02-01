@@ -3,8 +3,6 @@ from socket import *
 import sys # In order to terminate the program
 
 
-
-
 class note():
 	message = "Hello World"
 	coords = [-1,-1]
@@ -68,19 +66,25 @@ while True:
 	#send in info client needs - size of board,color etc
 	connectionSocket.send(formatted_message.encode())
 
-	#getting message from client
-	message = connectionSocket.recv(1024).decode()
-	option = message[0]
-	print(option)
-	
-	#if option was 1 then get note
-	if(option == 1):
-		note = ' '.join(message.split(" ")[1:])
-		print(note)
+	try:
+		message = connectionSocket.recv(1024).decode()
+		print(message)
+		option = message[0]
+		print(option)	
 
-	elif(option == 5):
-		#closing all connections
-		connectionSocket.close()
+		#if option was 2 then get close , 3 note
+		if(option == 2):
+			#closing all connections
+			connectionSocket.close()
+
+		if(option == 3):
+			note = ' '.join(message.split(" ")[1:])
+			print(note)
+		
+	except:
+		print("1")
+
+		
 
 
 serverSocket.close()  
