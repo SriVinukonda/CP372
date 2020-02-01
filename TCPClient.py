@@ -25,9 +25,9 @@ def post(board_width,board_height):
 
         if(check_input):
             good_input = 1
+            return note
 
-
-
+   
 
 # Bind the socket to server address and server port
 clientSocket = socket(AF_INET, SOCK_STREAM)
@@ -69,7 +69,9 @@ while good_input == 0:
 
 #check which options and respond accordingly
 if option == 1:
-    post(board_width,board_height)
+    note = post(board_width,board_height)
+    clientSocket.send(note.encode())
+
 elif option == 5:
     clientSocket.close()
 
