@@ -27,7 +27,9 @@ def post(board_width,board_height):
             good_input = 1
             return note
 
-   
+
+def pin(coords,noteList):
+    
 
 # Bind the socket to server address and server port
 clientSocket = socket(AF_INET, SOCK_STREAM)

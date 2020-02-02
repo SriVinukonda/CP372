@@ -5,7 +5,7 @@ import sys # In order to terminate the program
 
 
 
-class note():
+class note():	
 	message = "Hello World"
 	coords = [-1,-1]
 	dimensions = [0,0]
@@ -21,6 +21,18 @@ def createNote(messageIn,coordsIn,dimensionsIn, colorIn):
 
 	return stickyNote
 
+def pin(notesList, coords):
+	k = 0
+	while(k < len(notesList)):
+		#Checks if the pin will actually pin any notes 
+		if((notesList[i].coords[0] < coordsIn[0]) and (coordsIn[0] < notesList[i].coords[0]+notesList[i].dimensions[0])):
+			if((notesList[i].coords[1] < coordsIn[1]) and (coordsIn[1] < notesList[i].coords[1]+notesList[i].dimensions[1])):
+				notesList.pinned = 1
+
+		k+=1
+
+
+
 # Create a TCP server socket
 #(AF_INET is used for IPv4 protocols)
 #(SOCK_STREAM is used for TCP)
@@ -33,7 +45,7 @@ if(len(sys.argv) > 4):
 	board_width = int(sys.argv[2])
 	board_height = int(sys.argv[3])
 	color = sys.argv[4:]
-
+	pinned = 0
 	server_start = sys.argv[1] + " "
 
 		
@@ -77,8 +89,12 @@ while True:
 	if(option == 1):
 		note = ' '.join(message.split(" ")[1:])
 		print(note)
-
-	elif(option == 5):
+	
+	elif(option == 1000):
+		pin(notesList, coords)
+		
+	
+	elif(option == 7):
 		#closing all connections
 		connectionSocket.close()
 
