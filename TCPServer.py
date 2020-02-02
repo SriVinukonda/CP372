@@ -58,6 +58,7 @@ def post(message):
 def get_pins(message):
 
 	message = message.split(" ")
+	print(message)
 	message_value = ""
 	coordinates = []
 	color = ""
@@ -182,31 +183,30 @@ while True:
 	#send in info client needs - size of board,color etc
 	connectionSocket.send(formatted_message.encode())
 
-	message = connectionSocket.recv(1024).decode()
-	option = int(message[0])
-	print(option)
+	try:
+		message = connectionSocket.recv(1024).decode()
+		option = int(message[0])
+		print(message)
 	
-	#if option was 2 then get close , 3 note
-	if(option == 2):
-		#closing all connections
-		connectionSocket.close()
+		#if option was 2 then get close , 3 note
+		if(option == 2):
+			#closing all connections
+			connectionSocket.close()
 
-	if(option == 3):
-		message = ' '.join(message.split(" ")[2:])
-		post(message)
+		if(option == 3):
+			message = ' '.join(message.split(" ")[2:])
+			post(message)
 
-	elif(option == 4):
-		get_pins(message[1:])
-
-	#reset the board
-	elif (option == 7):
-
-		note_list = []
-	
-
-	
+		elif(option == 4):
+			get_pins(message[1:])
 
 		
+		
+	except:
+		print("1")
+
+		
+
 
 serverSocket.close()  
 sys.exit()#Terminate the program after sending the corresponding data

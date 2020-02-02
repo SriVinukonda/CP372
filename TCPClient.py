@@ -5,6 +5,9 @@ import sys # In order to terminate the program
 
 print("server_start")
 
+#variables
+i = 0
+
 # Bind the socket to server address and server port
 clientSocket = socket(AF_INET, SOCK_STREAM)
 
@@ -95,6 +98,7 @@ while disconnect == 0:
 
         elif option == 2:
             
+      
             message = "2 "
             #send message with option
             clientSocket.send(message.encode())
@@ -104,7 +108,6 @@ while disconnect == 0:
         elif option == 3:
 
             #grabs info needed to to client functions
-           
             formattedMessage = clientSocket.recv(1024)
             print('From server: ', formattedMessage.decode())
             formattedMessage = formattedMessage.decode().split(" ")
@@ -132,6 +135,7 @@ while disconnect == 0:
             clientSocket.send(message.encode())
 
         elif option == 7:
+
 
             message = "7 "
             
