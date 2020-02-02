@@ -55,6 +55,83 @@ def post(message):
 	#append note
 	note_list.append(stickyNote)
 
+def get_pins(message):
+
+	message = message.split(" ")
+	message_value = ""
+	coordinates = []
+	color = ""
+
+	i = 0
+
+	#go through message and grab important details
+	while i < len(message):
+		
+		if len(message[i]) >= 6 and message[i][:6] == "color=":
+			color = message[i][6:]
+
+		elif len(message[i]) >= 9 and message[i][:9] == "contains=":
+			coordinates = [int(message[i+1]),int(message[i+2])]
+
+		elif len(message[i]) >= 10 and message[i][:10] == "refersTo":
+			message_value = message[i][10:]
+
+		i+=1
+
+
+	#check what is filled and find coordinating notes
+	if(message_value != "" and coordinates != [] and color != ""):
+
+		for i in note_list:
+			if(color == i.color and message_value in i.message and coordinates == i.coords):
+				print(i.message)
+
+	elif(message_value != "" and coordinates != []):
+
+		for i in note_list:
+			if(message_value in i.message and coordinates == i.coords):
+				print(i.message)
+
+	
+	elif(message_value != "" and color != ""):
+
+		for i in note_list:
+			if(color == i.color and message_value in i.message):
+				print(i.message)
+
+	
+	elif(coordinates != [] and color != ""):
+
+		for i in note_list:
+			if(color == i.color and coordinates == i.coords):
+				print(i.message)
+
+	elif(coordinates != []):
+
+		for i in note_list:
+			if(coordinates == i.coords):
+				print(i.message)
+
+	elif(color != ""):
+
+		for i in note_list:
+			if(color == i.color):
+				print(i.message)
+
+	elif(message_value != ""):
+
+		for i in note_list:
+			if(message_value in i.message):
+				print(i.message)
+
+	
+
+	
+
+
+				
+
+
 
 
 # Create a TCP server socket
@@ -105,24 +182,31 @@ while True:
 	#send in info client needs - size of board,color etc
 	connectionSocket.send(formatted_message.encode())
 
-	try:
-		message = connectionSocket.recv(1024).decode()
-		option = int(message[0])
+	message = connectionSocket.recv(1024).decode()
+	option = int(message[0])
+	print(option)
 	
-		#if option was 2 then get close , 3 note
-		if(option == 2):
-			#closing all connections
-			connectionSocket.close()
+	#if option was 2 then get close , 3 note
+	if(option == 2):
+		#closing all connections
+		connectionSocket.close()
 
-		if(option == 3):
-			message = ' '.join(message.split(" ")[2:])
-			post(message)
+	if(option == 3):
+		message = ' '.join(message.split(" ")[2:])
+		post(message)
+
+	elif(option == 4):
+		get_pins(message[1:])
+
+	#reset the board
+	elif (option == 7):
+
+		note_list = []
+	
+
+	
+
 		
-	except:
-		print("1")
-
-		
-
 
 serverSocket.close()  
 sys.exit()#Terminate the program after sending the corresponding data

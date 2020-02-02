@@ -38,7 +38,19 @@ def post(board_width,board_height):
             print("Incorrect input , try again..")
 
 def get_pins(color,coordinates,refersTo):
-    print("here")
+    
+    print("\n--------general format--------\n")
+    print("color = <color> contains = <coord> refersTo = <string>\n")
+    print("partial gets is allowed however format above needs to be followed\n")
+   
+    #error handling still needed
+    good_input = False
+
+    get_pins = input("Enter the pins wanted/needed : ")
+
+    return get_pins
+
+    check_input = get_pins.split(" ")
 
 
 disconnect = 0
@@ -56,15 +68,16 @@ while disconnect == 0:
 
     print("\n---USE NUMBERS TO PICK OPTION---\n")
 
+
     good_input = 0
     option = 0
 
     #validate an actual option is chosen
     while good_input == 0:
      
-        option = int(input("Enter Option (1-5) : "))
+        option = int(input("Enter Option (1-7) : "))
     
-        if(option == 1 or option == 2 or option == 3 or option == 4 or option == 5):
+        if(option == 1 or option == 2 or option == 3 or option == 4 or option == 5 or option == 6 or option == 7):
             good_input = 1
 
     #keep trying if it doesnt work
@@ -100,21 +113,30 @@ while disconnect == 0:
             board_width = formattedMessage[1]
             board_height = formattedMessage[2]
 
-
             note = post(board_width,board_height)
             message = "3 " + note
             #send message with note and option dictated
             clientSocket.send(message.encode())
         
-        elif option == 3:
+        elif option == 4:
 
-            color = []
+            color = ""
             coordinates = []
             refersTo = ""
 
-            get_pins(color,coordinates,refersTo)
+            pins = get_pins(color,coordinates,refersTo)
 
+            message = "4 " + pins
+
+            #send message with note and option dictated
+            clientSocket.send(message.encode())
+
+        elif option == 7:
+
+            message = "7 "
             
+            #send message with note and option dictated
+            clientSocket.send(message.encode())
             
     except:
 
