@@ -130,10 +130,7 @@ def get_pins(message):
 	
 
 
-				
-
-
-
+			
 
 # Create a TCP server socket
 #(AF_INET is used for IPv4 protocols)
