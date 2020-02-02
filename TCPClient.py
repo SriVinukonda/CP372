@@ -37,6 +37,9 @@ def post(board_width,board_height):
         except:
             print("Incorrect input , try again..")
 
+def get_pins(color,coordinates,refersTo):
+    print("here")
+
 
 disconnect = 0
 
@@ -102,6 +105,16 @@ while disconnect == 0:
             message = "3 " + note
             #send message with note and option dictated
             clientSocket.send(message.encode())
+        
+        elif option == 3:
+
+            color = []
+            coordinates = []
+            refersTo = ""
+
+            get_pins(color,coordinates,refersTo)
+
+            
             
     except:
 

@@ -2,22 +2,60 @@
 from socket import *
 import sys # In order to terminate the program
 
+#intialize note_list
+note_list = []
+colors = []
 
 class note():
-	message = "Hello World"
-	coords = [-1,-1]
-	dimensions = [0,0]
-	color = ""
+	message = ""
+	coords = []
+	dimensions = []
+	color = []
 
 def createNote(messageIn,coordsIn,dimensionsIn, colorIn):
 	stickyNote = note()
-
 	stickyNote.message = messageIn
 	stickyNote.coords = coordsIn
 	stickyNote.dimensions = dimensionsIn
 	stickyNote.color = colorIn
 
 	return stickyNote
+
+def post(message):
+
+	message = message.split(" ")
+	color = []
+
+	#use note message to dictate all values
+	coords = [int(message[0]),int(message[1])]
+	dimensions = [int(message[2]),int(message[3])]
+	
+	#check for values of colors are in what is allowed - rest are apart of message
+	index = 4
+
+	colorISALLOWED = 0
+	
+	while colorISALLOWED == 0:
+
+		if message[index] in colors:
+			color.append(message[index])
+			index+=1
+		
+		else:
+
+			colorISALLOWED = 1
+
+	#rest is part of message
+	message = ' '.join(message[index:])
+
+
+	#create note
+	stickyNote = createNote(message,coords,dimensions,color)
+
+	#append note
+	note_list.append(stickyNote)
+
+
 
 # Create a TCP server socket
 #(AF_INET is used for IPv4 protocols)
@@ -30,14 +68,14 @@ if(len(sys.argv) > 4):
 	serverPort = int(sys.argv[1])
 	board_width = int(sys.argv[2])
 	board_height = int(sys.argv[3])
-	color = sys.argv[4:]
+	colors = sys.argv[4:]
 
 	server_start = sys.argv[1] + " "
 
 		
 else:
 
-	print("not enough info provided")
+	print("not enough info provided or incorrect format")
 	exit(0)
 
 #server socket initialization
@@ -77,8 +115,8 @@ while True:
 			connectionSocket.close()
 
 		if(option == 3):
-			note = ' '.join(message.split(" ")[1:])
-			print(note)
+			message = ' '.join(message.split(" ")[2:])
+			post(message)
 		
 	except:
 		print("1")
