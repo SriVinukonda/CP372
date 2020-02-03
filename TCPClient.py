@@ -39,43 +39,51 @@ def post(board_width,board_height):
 
         except:
             print("Incorrect input , try again..")
-
-def get_pins(color,coordinates,refersTo):
-    
-    print("\n--------general format--------\n")
-    print("color = <color> contains = <coord> refersTo = <string>\n")
-    print("partial gets is allowed however format above needs to be followed\n")
-   
-    #error handling still needed
-    good_input = False
-
-    get_pins = input("Enter the pins wanted/needed: ")
-
-    return get_pins
-
-    check_input = get_pins.split(" ,")
-
-def getCoords():
+def getCoords(x,y):
     
     coordinates = ""
     coords = []
 
-    while ((len(coordinates) < 3)):
-        coordinates = input("Enter the coordinates,please make them comma seperated like this: <9 9>: ")
-        if(coordinates == " "):
-            break;
-        coords = list(coordinates.split(" "))
+    good_input = 0
+    
+    while good_input == 0:
+
+        try:
+
+            while ((len(coordinates) < 3)):
+                coordinates = input("Enter the coordinates,please make them comma seperated like this: <9 9>: ")
+                coords = coordinates.split(" ")
+
+                if (int(coords[0]) >= 0 and int(coords[0]) < int(x)):
+                    if(int(coords[1]) >= 0 and int(coords[1]) < int(y)):
+                        good_input = 1
+                coords = list(coordinates.split(" "))
+        except error as e:
+            print(e.strerror)
+            print("try again, bad input")
 
 
     
     return coords
+def get():
+    message = ""
+    valid = 0
+
+    while(valid == 0):
+        message = int(input("What would like to get? 0(PINS)? 1(COLOR)? 2(MESSAGE?)"))
+        if (message >= 0 and message <= 2):
+            valid == 1
+        
+
+
+    
 
 
 counter = 0
 disconnect = 0
 
 while disconnect == 0:
-    print("Itetaration number",counter)
+    # print("Itetaration number",counter)
     counter += 1
 
 
@@ -145,20 +153,20 @@ while disconnect == 0:
             coordinates = []
             refersTo = ""
 
-            pins = get_pins(color,coordinates,refersTo)
+            message = get()
 
-            message = "4 " + pins
+
 
             #send message with note and option dictated
             clientSocket.send(message.encode())
 
         elif option == 5:
-            coords = getCoords()
+            coords = getCoords(board_width, board_height)
             message = "5 " + coords[0] + " " + coords[1]
             print("message",message)
             clientSocket.send(message.encode())
         elif option == 6:
-            coords = getCoords()
+            coords = getCoords(board_width, board_height)
             message = "6 " + coords[0] + " " + coords[1]
             print("message",message)
             clientSocket.send(message.encode())

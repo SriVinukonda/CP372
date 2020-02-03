@@ -7,7 +7,7 @@ class note():
 	message = ""
 	coords = []
 	dimensions = []
-	color = []
+	color = ""
 	pinned = 0
 	pins = []
 
@@ -144,15 +144,16 @@ def unPin(coords,noteList):
 		if(len(noteList[i].pins) > 1):
 			j = 0
 			while (j < len(noteList[i].pins)):
-				temp = noteList[i].pins[j].split(" ")
+				temp = noteList[i].pins[j]
 				if(temp[0] == coords[0] and temp[1] == coords[1]):
-					noteList[i].pins.pop(j)
+					noteList[i].pins.remove(j)
 					noteList[i].pinned = 0
 					print("Note at {:} has been unpinned".format(noteList[i].coords),coords)
+				j+=1
 
 		else:
 			if(len(noteList[i].pins) == 1):
-				temp = noteList[i].pins[0].split(" ")
+				temp = noteList[i].pins[0]
 				if(temp[0] == coords[0] and temp[1] == coords[1]):
 					noteList[i].pins.pop(0)
 					noteList[i].pinned = 0
@@ -243,7 +244,7 @@ while True:
 			# print("INSIDE OPTION 6\n")
 			decodedMessage= message.split(" ")
 			print("Message inside server in option 6",decodedMessage[1:])
-			pin(decodedMessage[1:],note_list)
+			unPin(decodedMessage[1:],note_list)
 		
 		
 	except error as e:
