@@ -2,15 +2,14 @@
 from socket import *
 import sys # In order to terminate the program
 
-#intialize note_list
-note_list = []
-colors = []
 
 class note():
 	message = ""
 	coords = []
 	dimensions = []
 	color = []
+	pinned = 0
+	pins = []
 
 def createNote(messageIn,coordsIn,dimensionsIn, colorIn):
 	stickyNote = note()
@@ -21,7 +20,7 @@ def createNote(messageIn,coordsIn,dimensionsIn, colorIn):
 
 	return stickyNote
 
-def post(message):
+def post(message,note_list):
 
 	message = message.split(" ")
 	color = []
@@ -48,7 +47,6 @@ def post(message):
 	#rest is part of message
 	message = ' '.join(message[index:])
 
-
 	#create note
 	stickyNote = createNote(message,coords,dimensions,color)
 
@@ -62,6 +60,7 @@ def get_pins(message):
 	message_value = ""
 	coordinates = []
 	color = ""
+
 
 	i = 0
 
@@ -125,12 +124,42 @@ def get_pins(message):
 			if(message_value in i.message):
 				print(i.message)
 
-	
+def pin(coords,noteList):
+	i = 0
+	print("Inside pin in server",coords[0],coords[1])
+	while (i < len(noteList)):
+		if(noteList[i].coords[0]< coords[0] and coords[0] < noteList[i].coords[0]+noteList[i].dimensions[0]):
+			if(noteList[i].coords[1]< coords[1] and coords[1] < noteList[i].coords[1]+noteList[i].dimensions[1]):
+				noteList.pinned = 1
+				noteList.pins.append(coords)
+				print("Note at {} has been pinned.",coords)
+		i += 1
 
-	
+def unPin(coords,noteList):
+	i = 0
+	while(i < len(noteList)):
+		if(len(noteList[i].pins) > 1):
+			j = 0
+			while (j < len(noteList[i].pins)):
+				temp = noteList[i].pins[j].split(" ")
+				if(temp[0] == coords[0] and temp[1] == coords[1]):
+					noteList[i].pins.pop(j)
+					noteList[i].pinned = 0
+
+		else:
+			if(len(noteList[i].pins) == 1):
+				temp = noteList[i].pins[0].split(" ")
+				if(temp[0] == coords[0] and temp[1] == coords[1]):
+					noteList[i].pins.pop(0)
+					noteList[i].pinned = 0
+
+		i+=1
 
 
-			
+#intialize note_list
+note_list = []
+colors = []
+
 
 # Create a TCP server socket
 #(AF_INET is used for IPv4 protocols)
@@ -139,17 +168,13 @@ server_start = " "
 
 #used to get all info from command line - board size , color  etc
 if(len(sys.argv) > 4):
-
 	serverPort = int(sys.argv[1])
 	board_width = int(sys.argv[2])
 	board_height = int(sys.argv[3])
 	colors = sys.argv[4:]
 
-	server_start = sys.argv[1] + " "
-
-		
+	server_start = sys.argv[1] + " "		
 else:
-
 	print("not enough info provided or incorrect format")
 	exit(0)
 
@@ -159,8 +184,8 @@ serverSocket = socket(AF_INET, SOCK_STREAM)
 # Bind the socket to server address and server port
 serverSocket.bind(("", serverPort))
 
-# Listen to at most 1 connection at a time
-serverSocket.listen(1)
+# Listen to at most many connection at a time
+serverSocket.listen()
 
 print ('The server is ready to receive')
 
@@ -169,7 +194,7 @@ print ('The server is ready to receive')
 #while server is on keep intaking client sockets
 while True:
 
-	print('The server is ready to receive')
+	print('The server is ready to receive inside while')
 
 	# Set up a new connection from the client
 	connectionSocket, addr = serverSocket.accept()
@@ -177,30 +202,40 @@ while True:
 	#convert list to string to send info to client
 	formatted_message = ' '.join(str(e) for e in sys.argv[1:])
 
+
+	print("formatted_message",formatted_message)
 	#send in info client needs - size of board,color etc
 	connectionSocket.send(formatted_message.encode())
 
 	try:
 		message = connectionSocket.recv(1024).decode()
+		
 		option = int(message[0])
 		print(message)
-	
+		print("INSIDE OPTIONS\n")
 		#if option was 2 then get close , 3 note
 		if(option == 2):
 			#closing all connections
 			connectionSocket.close()
 
 		if(option == 3):
+			print()
 			message = ' '.join(message.split(" ")[2:])
-			post(message)
+			post(message, note_list)
 
 		elif(option == 4):
+			print("Inside OPTION 4")
 			get_pins(message[1:])
-
+		elif(option == 5):
+			print("INSIDE OPTION 3\n")
+			pin(message[1:],note_list)
+		# elif(option == 6):
+		# 	print("In")
 		
 		
-	except:
-		print("1")
+	except error as e:
+		print(e.strerror)
+		print("Error")
 
 		
 

@@ -1,9 +1,8 @@
 
 # Import socket module
 from socket import *
-import sys # In order to terminate the program
 
-print("server_start")
+import sys # In order to terminate the program
 
 #variables
 i = 0
@@ -53,12 +52,31 @@ def get_pins(color,coordinates,refersTo):
 
     return get_pins
 
-    check_input = get_pins.split(" ")
+    check_input = get_pins.split(" ,")
+
+def pin():
+    
+    coordinates = ""
+    coords = []
+
+    while ((len(coordinates) < 3)):
+        coordinates = input("Enter the coordinates,please make them comma seperated like this: <9 9>: ")
+        if(coordinates == " "):
+            break;
+        coords = list(coordinates.split(" "))
 
 
+    
+    return coords
+
+counter = 0
 disconnect = 0
 
+clientSocket.connect(("localhost", 2333))
 while disconnect == 0:
+    print("Itetaration number",counter)
+    counter += 1
+
 
     print("\n-----------------OPTIONS-------------\n")
     print("1. CONNECT\n")
@@ -78,34 +96,23 @@ while disconnect == 0:
     #validate an actual option is chosen
     while good_input == 0:
      
-        option = int(input("Enter Option (1-7) : "))
+        option = int(input("Enter Option (1-7): "))
     
-        if(option == 1 or option == 2 or option == 3 or option == 4 or option == 5 or option == 6 or option == 7):
+        if(option >= 1 and option <= 7):
             good_input = 1
 
     #keep trying if it doesnt work
+    print("Before connecting")
+
     try:
+        print("INSIDE TRY STATEMENT")
 
         #check which options and respond accordingly
         if option == 1:
-
-            #ask user for port and name
-            serverPort = int(input("Server Port : "))
-            serverName = input("server address : ")
-
-            #connect to socket and send server info
-            clientSocket.connect((serverName, serverPort))
-
-        elif option == 2:
+            serverPort = int(input("Server port: "))
+            serverAddr = input("Server address: ")
             
-      
-            message = "2 "
-            #send message with option
-            clientSocket.send(message.encode())
-            clientSocket.close()
-            disconnect = 1  
-
-        elif option == 3:
+            # clientSocket.connect((serverAddr, serverPort))
 
             #grabs info needed to to client functions
             formattedMessage = clientSocket.recv(1024)
@@ -116,6 +123,15 @@ while disconnect == 0:
             board_width = formattedMessage[1]
             board_height = formattedMessage[2]
 
+        elif option == 2:
+            message = "2 "
+            #send message with option
+            clientSocket.send(message.encode())
+            clientSocket.close()
+            disconnect = 1  
+
+        elif option == 3:
+            
             note = post(board_width,board_height)
             message = "3 " + note
             #send message with note and option dictated
@@ -133,6 +149,11 @@ while disconnect == 0:
 
             #send message with note and option dictated
             clientSocket.send(message.encode())
+        elif option == 5:
+            coords = pin()
+            message = "5 " + coords[0] + " " + coords[1]
+            print("message",message)
+            clientSocket.send(message.encode())
 
         elif option == 7:
 
@@ -142,8 +163,8 @@ while disconnect == 0:
             #send message with note and option dictated
             clientSocket.send(message.encode())
             
-    except:
-
+    except error as e: 
+        print(e.strerror)
         print("error try connecting before starting any process..")
 
 
