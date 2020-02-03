@@ -7,6 +7,7 @@ import sys # In order to terminate the program
 #variables
 i = 0
 
+
 # Bind the socket to server address and server port
 clientSocket = socket(AF_INET, SOCK_STREAM)
 
@@ -48,7 +49,7 @@ def get_pins(color,coordinates,refersTo):
     #error handling still needed
     good_input = False
 
-    get_pins = input("Enter the pins wanted/needed : ")
+    get_pins = input("Enter the pins wanted/needed: ")
 
     return get_pins
 
@@ -72,7 +73,6 @@ def pin():
 counter = 0
 disconnect = 0
 
-clientSocket.connect(("localhost", 2333))
 while disconnect == 0:
     print("Itetaration number",counter)
     counter += 1
@@ -112,7 +112,7 @@ while disconnect == 0:
             serverPort = int(input("Server port: "))
             serverAddr = input("Server address: ")
             
-            # clientSocket.connect((serverAddr, serverPort))
+            clientSocket.connect((serverAddr, serverPort))
 
             #grabs info needed to to client functions
             formattedMessage = clientSocket.recv(1024)
@@ -131,6 +131,7 @@ while disconnect == 0:
             disconnect = 1  
 
         elif option == 3:
+
             
             note = post(board_width,board_height)
             message = "3 " + note
@@ -149,6 +150,7 @@ while disconnect == 0:
 
             #send message with note and option dictated
             clientSocket.send(message.encode())
+
         elif option == 5:
             coords = pin()
             message = "5 " + coords[0] + " " + coords[1]

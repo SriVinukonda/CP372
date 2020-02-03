@@ -189,38 +189,39 @@ serverSocket.listen()
 
 print ('The server is ready to receive')
 
+# Set up a new connection from the client
+connectionSocket, addr = serverSocket.accept()
+
+print('The server is ready to receive inside while')
+
+#convert list to string to send info to client
+formatted_message = ' '.join(str(e) for e in sys.argv[1:])
+
+
+print("formatted_message",formatted_message)
+#send in info client needs - size of board,color etc
+connectionSocket.send(formatted_message.encode())
+
 # Server should be up and running and listening to the incoming connections
 
 #while server is on keep intaking client sockets
 while True:
 
-	print('The server is ready to receive inside while')
-
-	# Set up a new connection from the client
-	connectionSocket, addr = serverSocket.accept()
-
-	#convert list to string to send info to client
-	formatted_message = ' '.join(str(e) for e in sys.argv[1:])
-
-
-	print("formatted_message",formatted_message)
-	#send in info client needs - size of board,color etc
-	connectionSocket.send(formatted_message.encode())
-
 	try:
 		message = connectionSocket.recv(1024).decode()
-		
-		option = int(message[0])
-		print(message)
+		print(message.split(" ")[0])
+		option = int(message.split(" ")[0])
+	
 		print("INSIDE OPTIONS\n")
 		#if option was 2 then get close , 3 note
 		if(option == 2):
 			#closing all connections
-			connectionSocket.close()
+			print("disconnect -- need")
 
-		if(option == 3):
+		elif(option == 3):
 			print()
 			message = ' '.join(message.split(" ")[2:])
+			print(message)
 			post(message, note_list)
 
 		elif(option == 4):
