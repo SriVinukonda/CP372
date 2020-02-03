@@ -128,11 +128,14 @@ def pin(coords,noteList):
 	i = 0
 	print("Inside pin in server",coords[0],coords[1])
 	while (i < len(noteList)):
-		if(noteList[i].coords[0]< coords[0] and coords[0] < noteList[i].coords[0]+noteList[i].dimensions[0]):
-			if(noteList[i].coords[1]< coords[1] and coords[1] < noteList[i].coords[1]+noteList[i].dimensions[1]):
-				noteList.pinned = 1
-				noteList.pins.append(coords)
-				print("Note at {} has been pinned.",coords)
+		if(int(noteList[i].coords[0]) < int(coords[0]) and int(coords[0]) < int(noteList[i].coords[0])+int(noteList[i].dimensions[0])):
+			if(int(noteList[i].coords[1])< int(coords[1]) and int(coords[1]) < int(noteList[i].coords[1])+int(noteList[i].dimensions[1])):
+				print("Inside the if statement(s)")
+				noteList[i].pinned = 1
+				noteList[i].pins.append(coords)
+				print("Note at {:} has been pinned.".format(noteList[i].coords),coords)
+			else:
+				print("No note present there")
 		i += 1
 
 def unPin(coords,noteList):
@@ -145,6 +148,7 @@ def unPin(coords,noteList):
 				if(temp[0] == coords[0] and temp[1] == coords[1]):
 					noteList[i].pins.pop(j)
 					noteList[i].pinned = 0
+					print("Note at {:} has been unpinned".format(noteList[i].coords),coords)
 
 		else:
 			if(len(noteList[i].pins) == 1):
@@ -152,6 +156,7 @@ def unPin(coords,noteList):
 				if(temp[0] == coords[0] and temp[1] == coords[1]):
 					noteList[i].pins.pop(0)
 					noteList[i].pinned = 0
+					print("Note at {:} has been unpinned".format(noteList[i].coords),coords)
 
 		i+=1
 
@@ -209,7 +214,7 @@ while True:
 
 	try:
 		message = connectionSocket.recv(1024).decode()
-		print(message.split(" ")[0])
+		print("Message received: ",message.split(" ")[0])
 		option = int(message.split(" ")[0])
 	
 		print("INSIDE OPTIONS\n")
@@ -217,7 +222,8 @@ while True:
 		if(option == 2):
 			#closing all connections
 			print("disconnect -- need")
-
+			connectionSocket.close()
+			break
 		elif(option == 3):
 			print()
 			message = ' '.join(message.split(" ")[2:])
@@ -228,10 +234,16 @@ while True:
 			print("Inside OPTION 4")
 			get_pins(message[1:])
 		elif(option == 5):
-			print("INSIDE OPTION 3\n")
-			pin(message[1:],note_list)
-		# elif(option == 6):
-		# 	print("In")
+			# print("INSIDE OPTION 5\n")
+			
+			decodedMessage= message.split(" ")
+			print("Message inside server in option 5",decodedMessage[1:])
+			pin(decodedMessage[1:],note_list)
+		elif(option == 6):
+			# print("INSIDE OPTION 6\n")
+			decodedMessage= message.split(" ")
+			print("Message inside server in option 6",decodedMessage[1:])
+			pin(decodedMessage[1:],note_list)
 		
 		
 	except error as e:

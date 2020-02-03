@@ -55,7 +55,7 @@ def get_pins(color,coordinates,refersTo):
 
     check_input = get_pins.split(" ,")
 
-def pin():
+def getCoords():
     
     coordinates = ""
     coords = []
@@ -69,6 +69,7 @@ def pin():
 
     
     return coords
+
 
 counter = 0
 disconnect = 0
@@ -152,8 +153,13 @@ while disconnect == 0:
             clientSocket.send(message.encode())
 
         elif option == 5:
-            coords = pin()
+            coords = getCoords()
             message = "5 " + coords[0] + " " + coords[1]
+            print("message",message)
+            clientSocket.send(message.encode())
+        elif option == 6:
+            coords = getCoords()
+            message = "6 " + coords[0] + " " + coords[1]
             print("message",message)
             clientSocket.send(message.encode())
 
