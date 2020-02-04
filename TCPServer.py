@@ -66,11 +66,13 @@ def get(message, noteList, pinList):
 		color = splitString[2].split("=")
 		for i in range(len(noteList)):	
 			print("INSIDE GET FIRST FOR STATEMENT")
-			if(noteList[i].color == color[1]):
+			print("{0:} == {1:}".format(noteList[i].color[0], color[1]))
+			if(noteList[i].color[0] == color[1]):
+				
 				currentCoords = noteList[i].coords
 				for j in range(len(currentCoords)):
 					print("INSIDE GET SECOND FOR STATEMENT")
-					if(int(currentCoords[j][0]) == int(splitString[4])):
+					if(int(currentCoords[j]) == int(splitString[4])):
 						if(int(currentCoords[j][1]) == int(splitString[5])):
 							returnList.append(noteList[i])
 	

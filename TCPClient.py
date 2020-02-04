@@ -90,7 +90,8 @@ def get(width, height):
             if(int(In.split(" ")[0]) > 0 and  int(In.split(" ")[0]) < int(width) ):
                 if(int(In.split(" ")[1]) > 0 and  int(In.split(" ")[1]) < int(width) ):
                     valid = 1
-    except:
+    except error as e:
+        print(e.strerror)
         pass
 
     if(yesNo == "y"):
