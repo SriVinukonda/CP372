@@ -53,92 +53,62 @@ def post(message,note_list):
 	#append note
 	note_list.append(stickyNote)
 
-def get_pins(message):
-
-	message = message.split(" ")
-	print(message)
-	message_value = ""
-	coordinates = []
-	color = ""
-
+def get(message, noteList, pinList):
+	splitString = message.split(" ")
 
 	i = 0
+	if (splitString[2] == "PINS"):
+		print("Pins:")
+		while(i < len(pinList)):
+			print("Pins:",pinList[i])
+			i += 1
+	elif(splitString[2] == "COLOR"):
+		print("Colors:")
+		while(i < len(noteList)):
+			print(noteList[i].color[0])
+			i += 1
+	elif(splitString[2] == "MESSAGES"):
+		print("Messages :")
+		while(i < len(noteList)):
+			print(noteList[i].message)
+			i += 1
 
-	#go through message and grab important details
-	while i < len(message):
-		
-		if len(message[i]) >= 6 and message[i][:6] == "color=":
-			color = message[i][6:]
+def clear(noteList):
 
-		elif len(message[i]) >= 9 and message[i][:9] == "contains=":
-			coordinates = [int(message[i+1]),int(message[i+2])]
-
-		elif len(message[i]) >= 10 and message[i][:10] == "refersTo":
-			message_value = message[i][10:]
-
-		i+=1
+	i = None
+	for i in noteList:
+		if(i.pinned == 0):
+			noteList.remove(i)
 
 
-	#check what is filled and find coordinating notes
-	if(message_value != "" and coordinates != [] and color != ""):
 
-		for i in note_list:
-			if(color == i.color and message_value in i.message and coordinates == i.coords):
-				print(i.message)
 
-	elif(message_value != "" and coordinates != []):
-
-		for i in note_list:
-			if(message_value in i.message and coordinates == i.coords):
-				print(i.message)
-
-	
-	elif(message_value != "" and color != ""):
-
-		for i in note_list:
-			if(color == i.color and message_value in i.message):
-				print(i.message)
-
-	
-	elif(coordinates != [] and color != ""):
-
-		for i in note_list:
-			if(color == i.color and coordinates == i.coords):
-				print(i.message)
-
-	elif(coordinates != []):
-
-		for i in note_list:
-			if(coordinates == i.coords):
-				print(i.message)
-
-	elif(color != ""):
-
-		for i in note_list:
-			if(color == i.color):
-				print(i.message)
-
-	elif(message_value != ""):
-
-		for i in note_list:
-			if(message_value in i.message):
-				print(i.message)
-
-def pin(coords,noteList):
+def pin(coords,noteList,pinList):
 	i = 0
-	print("Inside pin in server",coords[0],coords[1])
-	while (i < len(noteList)):
-		if(int(noteList[i].coords[0]) < int(coords[0]) and int(coords[0]) < int(noteList[i].coords[0])+int(noteList[i].dimensions[0])):
-			if(int(noteList[i].coords[1])< int(coords[1]) and int(coords[1]) < int(noteList[i].coords[1])+int(noteList[i].dimensions[1])):
+	# print("Inside pin in server",coords[0],coords[1])
+	j = 0
+	input = 1
+	while (j < len(pinList)):
+		if(int(pinList[j][0]) == int(coords[0]) and int(pinList[j][1]) == int(coords[1])):
+			input = 0
+			print("That pin already exists")
+			break
+		j += 1
+	if (input == 1):
+		print("INSIDE PIN INSIDE INPUT == 1")
+		pinList.append(coords)
+			
+
+	while (i < len(noteList) and input == 1):
+		if(int(noteList[i].coords[0]) <= int(coords[0]) and int(coords[0]) <= int(noteList[i].coords[0])+int(noteList[i].dimensions[0])):
+			if(int(noteList[i].coords[1]) <= int(coords[1]) and int(coords[1]) <= int(noteList[i].coords[1])+int(noteList[i].dimensions[1])):
 				print("Inside the if statement(s)")
 				noteList[i].pinned = 1
 				noteList[i].pins.append(coords)
 				print("Note at {:} has been pinned.".format(noteList[i].coords),coords)
-			else:
-				print("No note present there")
 		i += 1
 
-def unPin(coords,noteList):
+def unPin(coords,noteList,pinList):
 	i = 0
 	while(i < len(noteList)):
 		if(len(noteList[i].pins) > 1):
@@ -146,7 +116,8 @@ def unPin(coords,noteList):
 			while (j < len(noteList[i].pins)):
 				temp = noteList[i].pins[j]
 				if(temp[0] == coords[0] and temp[1] == coords[1]):
-					noteList[i].pins.remove(j)
+					rmv = noteList[i].pins.pop(j)
+					pinList.remove(rmv)
 					noteList[i].pinned = 0
 					print("Note at {:} has been unpinned".format(noteList[i].coords),coords)
 				j+=1
@@ -155,7 +126,8 @@ def unPin(coords,noteList):
 			if(len(noteList[i].pins) == 1):
 				temp = noteList[i].pins[0]
 				if(temp[0] == coords[0] and temp[1] == coords[1]):
-					noteList[i].pins.pop(0)
+					rmv = noteList[i].pins.pop(0)
+					pinList.remove(rmv)
 					noteList[i].pinned = 0
 					print("Note at {:} has been unpinned".format(noteList[i].coords),coords)
 
@@ -164,6 +136,7 @@ def unPin(coords,noteList):
 
 #intialize note_list
 note_list = []
+pin_list = []
 colors = []
 
 
@@ -232,19 +205,25 @@ while True:
 			post(message, note_list)
 
 		elif(option == 4):
-			print("Inside OPTION 4")
-			get_pins(message[1:])
+			print("Inside OPTION 4, message[0:] is:",message[0:])
+			print("Inside OPTION 4, message[1:] is:",message[1:])
+			print("Inside OPTION 4, message[2:] is:",message[2:])
+
+			get(message,note_list,pin_list)
 		elif(option == 5):
 			# print("INSIDE OPTION 5\n")
 			
 			decodedMessage= message.split(" ")
 			print("Message inside server in option 5",decodedMessage[1:])
-			pin(decodedMessage[1:],note_list)
+			pin(decodedMessage[1:],note_list,pin_list)
 		elif(option == 6):
 			# print("INSIDE OPTION 6\n")
 			decodedMessage= message.split(" ")
 			print("Message inside server in option 6",decodedMessage[1:])
-			unPin(decodedMessage[1:],note_list)
+			unPin(decodedMessage[1:],note_list,pin_list)
+		elif(option == 7):
+			clear()
+    		
 		
 		
 	except error as e:

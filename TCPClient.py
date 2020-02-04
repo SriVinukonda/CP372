@@ -65,16 +65,29 @@ def getCoords(x,y):
 
     
     return coords
-def get():
-    message = ""
-    valid = 0
+def get(width, height):
+    
+    message = "GET "
+    valid == 0
+    yesNo = input("Would you like to set a coordinate parameter? (y/n)")
+    while (valid == 0 and yesNo == "y"):
+        print("Enter the coordinates within the limits of the board")
+        coordIn = input("E.g: 9 8")
+        if(int(input.split(" ")[0] > 0 and  int(input.split(" ")[0] < width ))):
+            if(int(input.split(" ")[1] > 0 and  int(input.split(" ")[1] < width ))):
+                valid == 1
+    valid == 0
+
+    message += keyIn
+
+    keyIn = ""
 
     while(valid == 0):
-        message = int(input("What would like to get? 0(PINS)? 1(COLOR)? 2(MESSAGE?)"))
-        if (message >= 0 and message <= 2):
-            valid == 1
+        message = (input("What would like to get? 0(PINS)? 1(COLOR)? 2(MESSAGES?)"))
+        if (int(message) >= 0 and int(message) <= 2):
+            valid = 1
         
-
+    return message
 
     
 
@@ -155,7 +168,12 @@ while disconnect == 0:
 
             message = get()
 
-
+            if(message == "0"):
+                message = "4 GET PINS"
+            elif(message == "1"):
+                message = "4 GET COLOR"
+            else:
+                message = "4 GET MESSAGES"
 
             #send message with note and option dictated
             clientSocket.send(message.encode())
