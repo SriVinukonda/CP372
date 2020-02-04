@@ -172,6 +172,8 @@ while disconnect == 0:
             message = "2 "
             #send message with option
             clientSocket.send(message.encode())
+            modifiedSentence = clientSocket.recv(1024)
+            
             clientSocket.close()
             disconnect = 1  
 

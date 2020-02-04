@@ -59,14 +59,17 @@ def get(message, noteList, pinList):
 	splitString = message.split(" ")
 
 	if(len(splitString) == 7):
+		print("INSIDE get FIRST IF")
 		i = 0
 		j = 0
 
 		color = splitString[2].split("=")
 		for i in range(len(noteList)):	
+			print("INSIDE GET FIRST FOR STATEMENT")
 			if(noteList[i].color == color[1]):
 				currentCoords = noteList[i].coords
 				for j in range(len(currentCoords)):
+					print("INSIDE GET SECOND FOR STATEMENT")
 					if(int(currentCoords[j][0]) == int(splitString[4])):
 						if(int(currentCoords[j][1]) == int(splitString[5])):
 							returnList.append(noteList[i])
@@ -96,7 +99,7 @@ def get(message, noteList, pinList):
 				
 	elif(len(splitString) == 4):
 		i = 0
-		for i in range(noteList):
+		for i in range(len(noteList)):
 			currColor = splitString[2]
 			if(noteList[0].color == currColor.split("=")[2]):
 				returnList.append(noteList)
@@ -113,7 +116,6 @@ def get(message, noteList, pinList):
 	
 	l = 0
 	print("END OF GET INSIDE SERVER")
-	print(len(returnList))
 	# for l in range(len(returnList)):
 	# 	print("INSIDE OF FOR LOOP AT THE END OF GET")
 	# 	print(returnList[l])
