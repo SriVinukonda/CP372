@@ -54,24 +54,69 @@ def post(message,note_list):
 	note_list.append(stickyNote)
 
 def get(message, noteList, pinList):
+	print(message)
+	returnList = []
 	splitString = message.split(" ")
 
-	i = 0
-	if (splitString[2] == "PINS"):
-		print("Pins:")
-		while(i < len(pinList)):
-			print("Pins:",pinList[i])
-			i += 1
-	elif(splitString[2] == "COLOR"):
-		print("Colors:")
-		while(i < len(noteList)):
-			print(noteList[i].color[0])
-			i += 1
-	elif(splitString[2] == "MESSAGES"):
-		print("Messages :")
-		while(i < len(noteList)):
-			print(noteList[i].message)
-			i += 1
+	if(len(splitString) == 7):
+		i = 0
+		j = 0
+
+		color = splitString[2].split("=")
+		for i in range(len(noteList)):	
+			if(noteList[i].color == color[1]):
+				currentCoords = noteList[i].coords
+				for j in range(len(currentCoords)):
+					if(int(currentCoords[j][0]) == int(splitString[4])):
+						if(int(currentCoords[j][1]) == int(splitString[5])):
+							returnList.append(noteList[i])
+	
+		i = 0
+		rmv = 1
+		for i in range(len(returnList)):
+			for word in returnList.message:
+				if(word == splitString[6].split("=")[1]):
+					rmv = 0
+					break
+			if (rmv == 1):
+				returnList.pop(i)
+	elif(len(splitString) == 5):
+		if(splitString[2].split("=")[0] == "color"):
+			i = 0
+			for i in range(noteList):
+				currColor = splitString[2]
+				if(noteList[0].color == currColor.split("=")[2]):
+					returnList.append(noteList)
+			
+			for j in range(len(returnList)):
+				if(int(currentCoords[j][0]) == int(splitString[4])):
+					if(int(currentCoords[j][1]) == int(splitString[5])):
+						returnList.append(noteList[i])
+	
+				
+	elif(len(splitString) == 4):
+		i = 0
+		for i in range(noteList):
+			currColor = splitString[2]
+			if(noteList[0].color == currColor.split("=")[2]):
+				returnList.append(noteList)
+		
+		i = 0
+		rmv = 1
+		for i in range(len(returnList)):
+			for word in returnList.message:
+				if(word == splitString[3].split("=")[1]):
+					rmv = 0
+					break
+			if (rmv == 1):
+				returnList.pop(i)
+	
+	l = 0
+	print("END OF GET INSIDE SERVER")
+	print(len(returnList))
+	# for l in range(len(returnList)):
+	# 	print("INSIDE OF FOR LOOP AT THE END OF GET")
+	# 	print(returnList[l])
 
 def clear(noteList):
 
@@ -205,9 +250,7 @@ while True:
 			post(message, note_list)
 
 		elif(option == 4):
-			print("Inside OPTION 4, message[0:] is:",message[0:])
-			print("Inside OPTION 4, message[1:] is:",message[1:])
-			print("Inside OPTION 4, message[2:] is:",message[2:])
+			
 
 			get(message,note_list,pin_list)
 		elif(option == 5):

@@ -11,7 +11,7 @@ i = 0
 # Bind the socket to server address and server port
 clientSocket = socket(AF_INET, SOCK_STREAM)
 
-def post(board_width,board_height):
+def post(board_width,board_height,colors):
 
     good_input = 0
 
@@ -31,8 +31,10 @@ def post(board_width,board_height):
                 width = int(correct_input[1]) + int(correct_input[3])
                 height = int(correct_input[2]) + int(correct_input[4])
 
-                check_input = correct_input[0] == "POST" and width <= int(board_width) and height <= int(board_height)
+                color = correct_input[5]
 
+                check_input = color in colors and correct_input[0] == "POST" and width <= int(board_width) and height <= int(board_height)
+                print("POST COLOR IN COLORS:", color in colors)
                 if(check_input):
                     good_input = 1
                     return note
@@ -66,26 +68,46 @@ def getCoords(x,y):
     
     return coords
 def get(width, height):
-    
+
     message = "GET "
-    valid == 0
-    yesNo = input("Would you like to set a coordinate parameter? (y/n)")
-    while (valid == 0 and yesNo == "y"):
-        print("Enter the coordinates within the limits of the board")
-        coordIn = input("E.g: 9 8")
-        if(int(input.split(" ")[0] > 0 and  int(input.split(" ")[0] < width ))):
-            if(int(input.split(" ")[1] > 0 and  int(input.split(" ")[1] < width ))):
-                valid == 1
-    valid == 0
 
-    message += keyIn
+    valid = 0
+    In = ""
+    yesNo = input("Would you like to set a color parameter? (y/n)\n")
 
-    keyIn = ""
+    if yesNo == "y":
+        In = input("Enter a color: ")
+        message += "color="
+        message += In
+    
+    valid = 0
+    In = ""
+    yesNo = input("Would you like to set a coordinate parameter? (y/n)\n")
+    try:
+        while (valid == 0 and yesNo == "y"):
+            print("Enter the coordinates within the limits of the board")
+            In = input("E.g: 9 8\n")
+            if(int(In.split(" ")[0]) > 0 and  int(In.split(" ")[0]) < int(width) ):
+                if(int(In.split(" ")[1]) > 0 and  int(In.split(" ")[1]) < int(width) ):
+                    valid = 1
+    except:
+        pass
 
-    while(valid == 0):
-        message = (input("What would like to get? 0(PINS)? 1(COLOR)? 2(MESSAGES?)"))
-        if (int(message) >= 0 and int(message) <= 2):
-            valid = 1
+    if(yesNo == "y"):
+        message += " contains= "
+        message += In
+
+    valid = 0
+    In = ""
+    yesNo = input("Would you like to set a refersTo parameter? (y/n)\n")
+
+    if yesNo == "y":
+        In = input("Enter a string: ")
+        message += " refersTo="
+        message += In
+    
+    print("Message at the end of the get function in client:\n", message)
+    
         
     return message
 
@@ -144,6 +166,7 @@ while disconnect == 0:
             #get values of board
             board_width = formattedMessage[1]
             board_height = formattedMessage[2]
+            colors = formattedMessage[3:]
 
         elif option == 2:
             message = "2 "
@@ -155,7 +178,7 @@ while disconnect == 0:
         elif option == 3:
 
             
-            note = post(board_width,board_height)
+            note = post(board_width,board_height,colors)
             message = "3 " + note
             #send message with note and option dictated
             clientSocket.send(message.encode())
@@ -166,14 +189,8 @@ while disconnect == 0:
             coordinates = []
             refersTo = ""
 
-            message = get()
-
-            if(message == "0"):
-                message = "4 GET PINS"
-            elif(message == "1"):
-                message = "4 GET COLOR"
-            else:
-                message = "4 GET MESSAGES"
+            message = get(board_width,board_height)
+            message = "4 " + message
 
             #send message with note and option dictated
             clientSocket.send(message.encode())
